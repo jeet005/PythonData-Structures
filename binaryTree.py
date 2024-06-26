@@ -1,33 +1,26 @@
-class BinarySearchTreeNode:
+class BinarySearchTree:
     def __init__(self, data):
         self.data = data
         self.left = None
         self.right = None
-
-    def add_child(self, data):
-
-        if data == self.data:
-            return
-
-        if data < self.data:
-
+    
+    def add_child(self, val):
+        if val < self.data:
+            #add value in left
             if self.left:
-                self.left.add_child(data)
+                self.left.add_child(val)
             else:
-                self.left = BinarySearchTreeNode(data)
-
-        else:
-            
+                self.left = BinarySearchTree(val)
+        elif val > self.data:
+            #add value in right
             if self.right:
-                self.right.add_child(data)
+                self.right.add_child(val)
             else:
-                self.right = BinarySearchTreeNode(data)
-
+                self.right = BinarySearchTree(val)
+            
     def in_order_traversal(self):
-        
         elements = []
 
-        # visiting the left node
         if self.left:
             elements += self.left.in_order_traversal()
         
@@ -39,12 +32,12 @@ class BinarySearchTreeNode:
         return elements
     
     def search(self, val):
-        if val == self.data:
+        if self.data == val:
             return True
         
         if val < self.data:
             if self.left:
-                self.left.search(val)
+                return self.left.search(val)
             else:
                 return False
         
@@ -53,8 +46,6 @@ class BinarySearchTreeNode:
                 return self.right.search(val)
             else:
                 return False
-        
-        return False
 
     def find_min(self):
         
@@ -62,7 +53,7 @@ class BinarySearchTreeNode:
             self = self.left
         
         return self.data
-    
+
     def find_max(self):
         
         while self.right:
@@ -70,35 +61,48 @@ class BinarySearchTreeNode:
         
         return self.data
 
-    def calc_sum(self):
-
-        elements = []
-
-        # visiting the left node
-        if self.left:
-            elements += self.left.in_order_traversal()
+    def delete(self, data):
+        if data < self.data:
+            if self.left:
+                self.left = self.left.delete(data)
         
-        elements.append(self.data)
+        elif data > self.data:
+            if self.right:
+                self.right = self.right.delete(data)
+            
+        else:
+            if self.left is None and self.right is None:
+                return None
+            elif self.left is None:
+                return self.right
+            elif self.right is None:
+                return self.right
 
-        if self.right:
-            elements += self.right.in_order_traversal()
+            max_val = self.left.find_max()
+            self.data = max_val
+            self.left = self.left.delete(max_val)
         
-        return sum(elements)
-
-
+        return self
+    
 
 def build_tree(elements):
-    root = BinarySearchTreeNode(elements[0])
+    
+    root = BinarySearchTree(elements[0])
 
     for x in range(1, len(elements)):
         root.add_child(elements[x])
-    
+
     return root
 
 elements = [17, 4, 1, 20, 9, 23, 18, 34]
-tree = build_tree(elements)
-print(tree.in_order_traversal())
-print(tree.search(34))
-print(tree.find_min())
-print(tree.find_max())
-print(tree.calc_sum())
+root = build_tree(elements)
+print(root.in_order_traversal())
+print(root.search(20))
+print(root.find_min())
+print(root.find_max())
+root.delete(20)
+root.delete(1)
+print(root.in_order_traversal())
+
+
+            
