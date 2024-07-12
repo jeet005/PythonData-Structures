@@ -15,7 +15,7 @@ def binary_search(numbers, num):
         else:
             right_idx = mid_index - 1
     
-    return -1
+    return left_idx
 
 
-print(binary_search([1,2,3,4,5,6,7,8,9,10,15,20], 20))
+print(binary_search([1,3,5,6], 7))
